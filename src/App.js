@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import "./App.css";
 
 const ACCESS_TOKEN = `eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IlFVUTRNemhDUVVWQk1rTkJNemszUTBNMlFVVTRRekkyUmpWQ056VTJRelUxUTBVeE5EZzFNUSJ9.eyJodHRwczovL3BsYXRmb3JtLnN5bWJsLmFpL3VzZXJJZCI6IjYxMTIxNzc2ODQ0ODAwMDAiLCJpc3MiOiJodHRwczovL2RpcmVjdC1wbGF0Zm9ybS5hdXRoMC5jb20vIiwic3ViIjoiNmFmdnhBVlNNVVYyVVFSWXdmSmRBdWJPcFJYRFFZNU9AY2xpZW50cyIsImF1ZCI6Imh0dHBzOi8vcGxhdGZvcm0ucmFtbWVyLmFpIiwiaWF0IjoxNjU0NTMwMzkyLCJleHAiOjE2NTQ2MTY3OTIsImF6cCI6IjZhZnZ4QVZTTVVWMlVRUll3ZkpkQXViT3BSWERRWTVPIiwiZ3R5IjoiY2xpZW50LWNyZWRlbnRpYWxzIn0.p-jperWj7Nc6YBbroIuTsaUo3wGFScLGOh2GsJUht7JFPJW8PMOVbWQAjwRm_U2gDl5RMBTroyZBc1VaOODaRgWKe8MA3O3BWvzbmrLE-q2_0ApmZ5UjaYbpPPyA6x_ypcN0Orvf7nYVb66h4yXMPENAfOuAKLoyU3rwejr9W31Fm7jxcObGsKvpV3wgsKOIzEMOmYqP2-vBLDQQugEFcjoeWof-IRWFeRLVjHuddPxofNKxV-rgIfQ2GCM2hPYNwAX7cYW8mdIsourxi2wH-Dzpb67Xd5fF5UUhyL7gjqDg09jpnInRVntFai_lYDq-gbYRXUaFGn2Oi4RkpbiuoA`;
@@ -36,7 +36,7 @@ function App() {
     };
   };
 
-  const initWebsocket = async () => {
+  const initWebsocket = useCallback(async () => {
     const symblEndpoint = `ws://api.symbl.ai/v1/streaming/${"jdnaksd23987"}?access_token=${ACCESS_TOKEN}`;
 
     webSocketRef.current = new WebSocket(symblEndpoint);
@@ -59,7 +59,6 @@ function App() {
       console.log("event", event);
       console.log("Parsed Object", JSON.stringify(data, null, 2));
       if (data.type === "message" && data.message.payload) {
-        console.log("cureent = ", recognitionResult);
         setRecognitionResult(
           data.message.payload.raw.alternatives[0].transcript || ""
         );
@@ -95,8 +94,7 @@ function App() {
         })
       );
     };
-  };
-
+  }, []);
   useEffect(() => {
     if (!stream) {
       (async () => {
@@ -112,7 +110,7 @@ function App() {
       return;
     }
     initWebsocket();
-  }, [stream]);
+  }, [stream, initWebsocket]);
 
   return (
     <div className="m-10">
