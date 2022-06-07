@@ -16,7 +16,7 @@ function App() {
     if (!webSocket) return null;
 
     setStarted(true);
-    const AudioContext = window.AudioContext;
+
     const context = new AudioContext();
     const source = context.createMediaStreamSource(stream);
     const processor = context.createScriptProcessor(1024, 1, 1);
@@ -54,11 +54,12 @@ function App() {
           return acc;
         }, []);
 
-        setTrancript(msgs.join(" "));
+        setTrancript((curr) => curr + " " + msgs.join(" "));
       }
       console.log("event", event);
       console.log("Parsed Object", JSON.stringify(data, null, 2));
       if (data.type === "message" && data.message.payload) {
+        console.log("cureent = ", recognitionResult);
         setRecognitionResult(
           data.message.payload.raw.alternatives[0].transcript || ""
         );
