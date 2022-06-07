@@ -37,7 +37,7 @@ function App() {
   };
 
   const initWebsocket = useCallback(async () => {
-    const symblEndpoint = `ws://api.symbl.ai/v1/streaming/${"jdnaksd23987"}?access_token=${ACCESS_TOKEN}`;
+    const symblEndpoint = `wss://api.symbl.ai/v1/streaming/${"jdnaksd23987"}?access_token=${ACCESS_TOKEN}`;
 
     webSocketRef.current = new WebSocket(symblEndpoint);
     const webSocket = webSocketRef.current;
